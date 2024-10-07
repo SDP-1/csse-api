@@ -1,10 +1,10 @@
-package com.csse.csse_api;
+package com.csse.api;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class CsseApiApplicationTests {
+class ApplicationTests {
 
 	@Test
 	void contextLoads() {

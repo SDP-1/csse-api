@@ -1,13 +1,13 @@
-package com.csse.csse_api;
+package com.csse.api;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class CsseApiApplication {
+public class Application {
 
 	public static void main(String[] args) {
-		SpringApplication.run(CsseApiApplication.class, args);
+		SpringApplication.run(Application.class, args);
 	}
 
 }
