@@ -7,9 +7,8 @@ import jakarta.persistence.Table;
 import lombok.*;
 import org.springframework.context.annotation.Primary;
 
-@Data
 @Entity
-@Table(name="user")
+@Table(name="users")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
