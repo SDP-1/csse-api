@@ -1,0 +1,20 @@
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://postgresql-sysdba.alwaysdata.net:5432/sysdba_cssedb
+    username: sysdba
+    password: hackers-squad
+    hikari:
+      maximum-pool-size: 10
+
+  jpa:
+
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+
