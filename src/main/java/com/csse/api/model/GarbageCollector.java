@@ -12,7 +12,7 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
-public class GarbageCollector extends User{
+public class GarbageCollector extends User {
     private String collectorId;
     private String vehicleRegNo;
     private VehicleType vehicleType;
@@ -21,15 +21,12 @@ public class GarbageCollector extends User{
     private String currentLocation;
 
     @ManyToOne
-    @JoinColumn(name="wma_id", nullable = false)
-    private WMA wmaId;
-
-    @OneToMany(mappedBy = "garbageCollector")
-    private List<VehiclePrice> vehiclePrices;
+    @JoinColumn(name = "wma_id", nullable = false)
+    private WMA wma;
 
     @OneToMany(mappedBy = "collector", cascade = CascadeType.ALL)
     private List<CollectorAssignment> assignments;
 
-    @ManyToMany(mappedBy = "garbageCollector")
+    @ManyToMany(mappedBy = "garbageCollectors")
     private List<SpecialWasteRequest> specialWasteRequests;
 }

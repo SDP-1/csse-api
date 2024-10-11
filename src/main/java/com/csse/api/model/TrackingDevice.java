@@ -18,6 +18,7 @@ public class TrackingDevice {
     private long id;
     private String name;
     private String type;
+    private float currentWasteLevel;
 
     @Enumerated(EnumType.STRING)
     private TrackingDeviceStatus status;

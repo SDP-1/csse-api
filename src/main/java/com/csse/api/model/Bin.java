@@ -21,7 +21,6 @@ public class Bin {
     @JoinColumn(name = "waste_type_id", nullable = false)
     private WasteType wasteType;
     private String status;
-    private float currentWasteLevel;
 
     @OneToMany
     private List<CollectionRecord> collectionRecords;

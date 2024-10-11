@@ -1,13 +1,9 @@
 package com.csse.api.model;
 
-import com.csse.api.enums.VehicleType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.Map;
+import java.util.List;
 
 @Entity
 @NoArgsConstructor
@@ -21,7 +17,21 @@ public class SpecialWasteRequest {
     private String title;
     private String description;
     private String status;
+
+    @ManyToOne
+    @JoinColumn(name = "waste_type_id")
     private WasteType wasteType;
+
     private String location;
-    private Map<VehicleType, Integer> requiredVehicleTypes;
+
+    @OneToMany(mappedBy = "specialWasteRequest", cascade = CascadeType.ALL)
+    private List<VehicleTypeRequirement> requiredVehicleTypes;
+
+    @ManyToMany
+    @JoinTable(
+            name = "garbage_collector_special_waste_request",
+            joinColumns = @JoinColumn(name = "special_waste_request_id"),
+            inverseJoinColumns = @JoinColumn(name = "garbage_collector_id")
+    )
+    private List<GarbageCollector> garbageCollectors;
 }

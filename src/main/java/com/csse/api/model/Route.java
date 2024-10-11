@@ -26,8 +26,8 @@ public class Route {
     private Date lastOptimizedDate;
 
     @ManyToOne
-    @JoinColumn(name="wma_id", nullable = false)
-    private WMA wmaId;
+    @JoinColumn(name="wma", nullable = false)
+    private WMA wma;
 
     @OneToMany(mappedBy = "route", cascade = CascadeType.ALL)
     private List<CollectionSchedule> collectionSchedules;
