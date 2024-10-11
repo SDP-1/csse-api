@@ -17,12 +17,12 @@ public class Bin {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+
     @ManyToOne
     @JoinColumn(name = "waste_type_id", nullable = false)
     private WasteType wasteType;
-    private String status;
 
-    @OneToMany
+    @OneToMany(mappedBy = "bin", cascade = CascadeType.ALL)
     private List<CollectionRecord> collectionRecords;
 
     @OneToOne
@@ -32,4 +32,8 @@ public class Bin {
     @ManyToOne
     @JoinColumn(name = "resident_id")
     private Resident resident;
+
+    @ManyToOne
+    @JoinColumn(name = "bin_type_id", nullable = false)
+    private BinTypes binType;
 }
