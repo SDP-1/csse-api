@@ -35,7 +35,7 @@ public class TransactionService {
 
         // Find and set Resident and WMA entities
         Resident resident = residentRepository.findById(dto.getResidentId()).orElseThrow();
-        WMA wma = wmaRepository.findById(String.valueOf(dto.getAuthorityId())).orElseThrow();
+        WMA wma = wmaRepository.findById(dto.getAuthorityId()).orElseThrow();
         transaction.setResident(resident);
         transaction.setWma(wma);
 
@@ -62,7 +62,7 @@ public class TransactionService {
 
         // Update the related Resident and WMA
         Resident resident = residentRepository.findById(dto.getResidentId()).orElseThrow();
-        WMA wma = wmaRepository.findById(String.valueOf(dto.getAuthorityId())).orElseThrow();
+        WMA wma = wmaRepository.findById(dto.getAuthorityId()).orElseThrow();
         transaction.setResident(resident);
         transaction.setWma(wma);
 

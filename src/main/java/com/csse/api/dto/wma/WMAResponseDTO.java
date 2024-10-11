@@ -1,20 +1,18 @@
 package com.csse.api.dto.wma;
 
-import lombok.*;
+
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Date;
 
-@NoArgsConstructor
-@AllArgsConstructor
 @Getter
 @Setter
-@ToString
 public class WMAResponseDTO {
-    private String authorityId;
+    private Long authorityId; // Change to Long type
     private String authorityName;
     private String region;
     private String contactNumber;
     private String address;
     private Date lastAuditedDate;
 }
-

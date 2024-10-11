@@ -5,5 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface WMARepository extends JpaRepository<WMA, String> {
+public interface WMARepository extends JpaRepository<WMA, Long> { // Change to Long
+    // Additional query methods (if needed) can be defined here
 }

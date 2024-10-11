@@ -13,9 +13,6 @@ import lombok.*;
 @Setter
 @ToString
 public class Admin extends User {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    protected long id;
     private String name;
     private boolean isSuperAdmin;
 }
