@@ -1,8 +1,8 @@
 package com.csse.api.controller;
 
-import com.csse.api.dto.collection_schedule.CollectionScheduleRequestDTO;
-import com.csse.api.dto.collection_schedule.CollectionScheduleResponseDTO;
-import com.csse.api.service.CollectionScheduleService;
+import com.csse.api.dto.route.RouteRequestDTO;
+import com.csse.api.dto.route.RouteResponseDTO;
+import com.csse.api.service.RouteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,29 +10,29 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/collection-schedules")
-public class CollectionScheduleController {
+@RequestMapping("/api/routes")
+public class RouteController {
 
     @Autowired
-    private CollectionScheduleService service;
+    private RouteService service;
 
     @PostMapping
-    public ResponseEntity<CollectionScheduleResponseDTO> create(@RequestBody CollectionScheduleRequestDTO dto) {
+    public ResponseEntity<RouteResponseDTO> create(@RequestBody RouteRequestDTO dto) {
         return ResponseEntity.ok(service.create(dto));
     }
 
     @GetMapping
-    public ResponseEntity<List<CollectionScheduleResponseDTO>> getAll() {
+    public ResponseEntity<List<RouteResponseDTO>> getAll() {
         return ResponseEntity.ok(service.getAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CollectionScheduleResponseDTO> getById(@PathVariable long id) {
+    public ResponseEntity<RouteResponseDTO> getById(@PathVariable long id) {
         return ResponseEntity.ok(service.getById(id));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CollectionScheduleResponseDTO> update(@PathVariable long id, @RequestBody CollectionScheduleRequestDTO dto) {
+    public ResponseEntity<RouteResponseDTO> update(@PathVariable long id, @RequestBody RouteRequestDTO dto) {
         return ResponseEntity.ok(service.update(id, dto));
     }
 

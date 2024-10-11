@@ -1,6 +1,7 @@
 package com.csse.api.service;
 
-import com.csse.api.dto.CollectorAssignmentDTO;
+import com.csse.api.dto.collector_assignment.CollectorAssignmentRequestDTO;
+import com.csse.api.dto.collector_assignment.CollectorAssignmentResponseDTO;
 import com.csse.api.model.CollectorAssignment;
 import com.csse.api.repository.CollectorAssignmentRepository;
 import org.modelmapper.ModelMapper;
@@ -8,44 +9,40 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class CollectorAssignmentService {
 
     @Autowired
-    private CollectorAssignmentRepository collectorAssignmentRepository;
+    private CollectorAssignmentRepository repository;
 
     @Autowired
     private ModelMapper modelMapper;
 
-    public CollectorAssignmentDTO createCollectorAssignment(CollectorAssignmentDTO collectorAssignmentDTO) {
-        CollectorAssignment collectorAssignment = modelMapper.map(collectorAssignmentDTO, CollectorAssignment.class);
-        collectorAssignment = collectorAssignmentRepository.save(collectorAssignment);
-        return modelMapper.map(collectorAssignment, CollectorAssignmentDTO.class);
+    public CollectorAssignmentResponseDTO create(CollectorAssignmentRequestDTO dto) {
+        CollectorAssignment entity = modelMapper.map(dto, CollectorAssignment.class);
+        return modelMapper.map(repository.save(entity), CollectorAssignmentResponseDTO.class);
     }
 
-    public List<CollectorAssignmentDTO> getAllCollectorAssignments() {
-        List<CollectorAssignment> assignments = collectorAssignmentRepository.findAll();
-        return assignments.stream()
-                .map(assignment -> modelMapper.map(assignment, CollectorAssignmentDTO.class))
+    public List<CollectorAssignmentResponseDTO> getAll() {
+        return repository.findAll().stream()
+                .map(entity -> modelMapper.map(entity, CollectorAssignmentResponseDTO.class))
                 .toList();
     }
 
-    public Optional<CollectorAssignmentDTO> getCollectorAssignmentById(long id) {
-        return collectorAssignmentRepository.findById(id)
-                .map(assignment -> modelMapper.map(assignment, CollectorAssignmentDTO.class));
+    public com.csse.api.dto.collector_assignment.CollectorAssignmentResponseDTO getById(long id) {
+        return repository.findById(id)
+                .map(entity -> modelMapper.map(entity, CollectorAssignmentResponseDTO.class))
+                .orElse(null);
     }
 
-    public CollectorAssignmentDTO updateCollectorAssignment(long id, CollectorAssignmentDTO collectorAssignmentDTO) {
-        CollectorAssignment collectorAssignment = collectorAssignmentRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Collector Assignment not found"));
-        modelMapper.map(collectorAssignmentDTO, collectorAssignment);
-        collectorAssignment = collectorAssignmentRepository.save(collectorAssignment);
-        return modelMapper.map(collectorAssignment, CollectorAssignmentDTO.class);
+    public com.csse.api.dto.collector_assignment.CollectorAssignmentResponseDTO update(long id, CollectorAssignmentRequestDTO dto) {
+        CollectorAssignment entity = repository.findById(id).orElseThrow();
+        modelMapper.map(dto, entity);
+        return modelMapper.map(repository.save(entity), CollectorAssignmentResponseDTO.class);
     }
 
-    public void deleteCollectorAssignment(long id) {
-        collectorAssignmentRepository.deleteById(id);
+    public void delete(long id) {
+        repository.deleteById(id);
     }
 }

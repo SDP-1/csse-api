@@ -1,6 +1,7 @@
 package com.csse.api.service;
 
-import com.csse.api.dto.CollectionScheduleDTO;
+import com.csse.api.dto.collection_schedule.CollectionScheduleRequestDTO;
+import com.csse.api.dto.collection_schedule.CollectionScheduleResponseDTO;
 import com.csse.api.model.CollectionSchedule;
 import com.csse.api.repository.CollectionScheduleRepository;
 import org.modelmapper.ModelMapper;
@@ -8,44 +9,40 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class CollectionScheduleService {
 
     @Autowired
-    private CollectionScheduleRepository collectionScheduleRepository;
+    private CollectionScheduleRepository repository;
 
     @Autowired
     private ModelMapper modelMapper;
 
-    public CollectionScheduleDTO createCollectionSchedule(CollectionScheduleDTO collectionScheduleDTO) {
-        CollectionSchedule collectionSchedule = modelMapper.map(collectionScheduleDTO, CollectionSchedule.class);
-        collectionSchedule = collectionScheduleRepository.save(collectionSchedule);
-        return modelMapper.map(collectionSchedule, CollectionScheduleDTO.class);
+    public CollectionScheduleResponseDTO create(CollectionScheduleRequestDTO dto) {
+        CollectionSchedule entity = modelMapper.map(dto, CollectionSchedule.class);
+        return modelMapper.map(repository.save(entity), CollectionScheduleResponseDTO.class);
     }
 
-    public List<CollectionScheduleDTO> getAllCollectionSchedules() {
-        List<CollectionSchedule> schedules = collectionScheduleRepository.findAll();
-        return schedules.stream()
-                .map(schedule -> modelMapper.map(schedule, CollectionScheduleDTO.class))
+    public List<CollectionScheduleResponseDTO> getAll() {
+        return repository.findAll().stream()
+                .map(entity -> modelMapper.map(entity, CollectionScheduleResponseDTO.class))
                 .toList();
     }
 
-    public Optional<CollectionScheduleDTO> getCollectionScheduleById(long id) {
-        return collectionScheduleRepository.findById(id)
-                .map(schedule -> modelMapper.map(schedule, CollectionScheduleDTO.class));
+    public CollectionScheduleResponseDTO getById(long id) {
+        return repository.findById(id)
+                .map(entity -> modelMapper.map(entity, CollectionScheduleResponseDTO.class))
+                .orElse(null);
     }
 
-    public CollectionScheduleDTO updateCollectionSchedule(long id, CollectionScheduleDTO collectionScheduleDTO) {
-        CollectionSchedule collectionSchedule = collectionScheduleRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Collection Schedule not found"));
-        modelMapper.map(collectionScheduleDTO, collectionSchedule);
-        collectionSchedule = collectionScheduleRepository.save(collectionSchedule);
-        return modelMapper.map(collectionSchedule, CollectionScheduleDTO.class);
+    public CollectionScheduleResponseDTO update(long id, CollectionScheduleRequestDTO dto) {
+        CollectionSchedule entity = repository.findById(id).orElseThrow();
+        modelMapper.map(dto, entity);
+        return modelMapper.map(repository.save(entity), CollectionScheduleResponseDTO.class);
     }
 
-    public void deleteCollectionSchedule(long id) {
-        collectionScheduleRepository.deleteById(id);
+    public void delete(long id) {
+        repository.deleteById(id);
     }
 }

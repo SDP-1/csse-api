@@ -1,6 +1,7 @@
 package com.csse.api.controller;
 
-import com.csse.api.model.Bin;
+import com.csse.api.dto.bin.BinRequestDTO;
+import com.csse.api.dto.bin.BinResponseDTO;
 import com.csse.api.service.BinService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -9,37 +10,35 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/bins")
+@RequestMapping("/api/bins")
 public class BinController {
 
     @Autowired
-    private BinService binService;
+    private BinService service;
+
+    @PostMapping
+    public ResponseEntity<BinResponseDTO> create(@RequestBody BinRequestDTO dto) {
+        return ResponseEntity.ok(service.create(dto));
+    }
 
     @GetMapping
-    public List<Bin> getAllBins() {
-        return binService.findAll();
+    public ResponseEntity<List<BinResponseDTO>> getAll() {
+        return ResponseEntity.ok(service.getAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Bin> getBinById(@PathVariable Long id) {
-        return binService.findById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
-    }
-
-    @PostMapping
-    public Bin createBin(@RequestBody Bin bin) {
-        return binService.createBin(bin);
+    public ResponseEntity<BinResponseDTO> getById(@PathVariable long id) {
+        return ResponseEntity.ok(service.getById(id));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Bin> updateBin(@PathVariable Long id, @RequestBody Bin bin) {
-        return ResponseEntity.ok(binService.updateBin(id, bin));
+    public ResponseEntity<BinResponseDTO> update(@PathVariable long id, @RequestBody BinRequestDTO dto) {
+        return ResponseEntity.ok(service.update(id, dto));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteBin(@PathVariable Long id) {
-        binService.deleteBin(id);
+    public ResponseEntity<Void> delete(@PathVariable long id) {
+        service.delete(id);
         return ResponseEntity.noContent().build();
     }
 }

@@ -1,6 +1,7 @@
 package com.csse.api.controller;
 
-import com.csse.api.dto.ResidentDTO;
+import com.csse.api.dto.resident.ResidentRequestDTO;
+import com.csse.api.dto.resident.ResidentResponseDTO;
 import com.csse.api.service.ResidentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -13,36 +14,31 @@ import java.util.List;
 public class ResidentController {
 
     @Autowired
-    private ResidentService residentService;
+    private ResidentService service;
 
     @PostMapping
-    public ResponseEntity<ResidentDTO> createResident(@RequestBody ResidentDTO residentDTO) {
-        ResidentDTO createdResident = residentService.createResident(residentDTO);
-        return ResponseEntity.ok(createdResident);
+    public ResponseEntity<ResidentResponseDTO> create(@RequestBody ResidentRequestDTO dto) {
+        return ResponseEntity.ok(service.create(dto));
     }
 
     @GetMapping
-    public ResponseEntity<List<ResidentDTO>> getAllResidents() {
-        List<ResidentDTO> residents = residentService.getAllResidents();
-        return ResponseEntity.ok(residents);
+    public ResponseEntity<List<ResidentResponseDTO>> getAll() {
+        return ResponseEntity.ok(service.getAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ResidentDTO> getResidentById(@PathVariable long id) {
-        return residentService.getResidentById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<ResidentResponseDTO> getById(@PathVariable long id) {
+        return ResponseEntity.ok(service.getById(id));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ResidentDTO> updateResident(@PathVariable long id, @RequestBody ResidentDTO residentDTO) {
-        ResidentDTO updatedResident = residentService.updateResident(id, residentDTO);
-        return ResponseEntity.ok(updatedResident);
+    public ResponseEntity<ResidentResponseDTO> update(@PathVariable long id, @RequestBody ResidentRequestDTO dto) {
+        return ResponseEntity.ok(service.update(id, dto));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteResident(@PathVariable long id) {
-        residentService.deleteResident(id);
+    public ResponseEntity<Void> delete(@PathVariable long id) {
+        service.delete(id);
         return ResponseEntity.noContent().build();
     }
 }

@@ -1,4 +1,4 @@
-package com.csse.api.dto;
+package com.csse.api.dto.collection_record;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,10 +9,9 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CollectionRecordDTO {
-    private long id;
-    private long binId; // Assuming Bin ID for mapping
-    private long collectionScheduleId; // Assuming CollectionSchedule ID for mapping
+public class CollectionRecordRequestDTO {
+    private long binId; // For mapping to the Bin entity
+    private long collectionScheduleId; // For mapping to the CollectionSchedule entity
     private LocalDateTime collectionDateTime;
     private float collectedWasteAmount;
     private String audioProof;

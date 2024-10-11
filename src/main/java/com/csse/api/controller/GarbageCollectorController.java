@@ -1,6 +1,7 @@
 package com.csse.api.controller;
 
-import com.csse.api.dto.GarbageCollectorDTO;
+import com.csse.api.dto.GarbageCollectorRequestDTO;
+import com.csse.api.dto.GarbageCollectorResponseDTO;
 import com.csse.api.service.GarbageCollectorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -13,36 +14,31 @@ import java.util.List;
 public class GarbageCollectorController {
 
     @Autowired
-    private GarbageCollectorService garbageCollectorService;
+    private GarbageCollectorService service;
 
     @PostMapping
-    public ResponseEntity<GarbageCollectorDTO> createGarbageCollector(@RequestBody GarbageCollectorDTO garbageCollectorDTO) {
-        GarbageCollectorDTO createdCollector = garbageCollectorService.createGarbageCollector(garbageCollectorDTO);
-        return ResponseEntity.ok(createdCollector);
+    public ResponseEntity<GarbageCollectorResponseDTO> create(@RequestBody GarbageCollectorRequestDTO dto) {
+        return ResponseEntity.ok(service.create(dto));
     }
 
     @GetMapping
-    public ResponseEntity<List<GarbageCollectorDTO>> getAllGarbageCollectors() {
-        List<GarbageCollectorDTO> collectors = garbageCollectorService.getAllGarbageCollectors();
-        return ResponseEntity.ok(collectors);
+    public ResponseEntity<List<GarbageCollectorResponseDTO>> getAll() {
+        return ResponseEntity.ok(service.getAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<GarbageCollectorDTO> getGarbageCollectorById(@PathVariable long id) {
-        return garbageCollectorService.getGarbageCollectorById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<GarbageCollectorResponseDTO> getById(@PathVariable long id) {
+        return ResponseEntity.ok(service.getById(id));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<GarbageCollectorDTO> updateGarbageCollector(@PathVariable long id, @RequestBody GarbageCollectorDTO garbageCollectorDTO) {
-        GarbageCollectorDTO updatedCollector = garbageCollectorService.updateGarbageCollector(id, garbageCollectorDTO);
-        return ResponseEntity.ok(updatedCollector);
+    public ResponseEntity<GarbageCollectorResponseDTO> update(@PathVariable long id, @RequestBody GarbageCollectorRequestDTO dto) {
+        return ResponseEntity.ok(service.update(id, dto));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteGarbageCollector(@PathVariable long id) {
-        garbageCollectorService.deleteGarbageCollector(id);
+    public ResponseEntity<Void> delete(@PathVariable long id) {
+        service.delete(id);
         return ResponseEntity.noContent().build();
     }
 }
