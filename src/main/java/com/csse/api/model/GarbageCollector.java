@@ -1,4 +1,35 @@
 package com.csse.api.model;
 
-public class GarbageCollector {
+import com.csse.api.enums.VehicleType;
+import jakarta.persistence.*;
+import lombok.*;
+
+import java.util.List;
+
+@Entity
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
+@ToString
+public class GarbageCollector extends User{
+    private String collectorId;
+    private String vehicleRegNo;
+    private VehicleType vehicleType;
+    private String model;
+    private String currentStatus;
+    private String currentLocation;
+
+    @ManyToOne
+    @JoinColumn(name="wma_id", nullable = false)
+    private WMA wmaId;
+
+    @OneToMany(mappedBy = "garbageCollector")
+    private List<VehiclePrice> vehiclePrices;
+
+    @OneToMany(mappedBy = "collector", cascade = CascadeType.ALL)
+    private List<CollectorAssignment> assignments;
+
+    @ManyToMany(mappedBy = "garbageCollector")
+    private List<SpecialWasteRequest> specialWasteRequests;
 }

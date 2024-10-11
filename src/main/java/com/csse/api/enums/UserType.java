@@ -1,4 +1,4 @@
-package enums;
+package com.csse.api.enums;
 
 public enum UserType {
     ADMIN,

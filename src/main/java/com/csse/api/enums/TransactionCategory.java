@@ -1,6 +1,6 @@
 package com.csse.api.enums;
 
-public enum TransactionType {
+public enum TransactionCategory {
     PAYMENT,
     PAYBACK
 }

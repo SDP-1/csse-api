@@ -7,8 +7,7 @@ import lombok.*;
 @Getter
 @Setter
 @ToString
-public class SystemAdmin {
+public class Admin {
     private String name;
     private boolean isSuperAdmin;
-
 }
