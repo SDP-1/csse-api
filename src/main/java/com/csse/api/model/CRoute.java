@@ -27,4 +27,6 @@ public class CRoute {
 
     @ElementCollection
     private List<Long> collectors;  // Collectors array of type long
+
+    
 }
