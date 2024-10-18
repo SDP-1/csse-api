@@ -1,14 +1,17 @@
 package com.csse.api.service;
 
-import com.csse.api.dto.BusinessDTO;
+import com.csse.api.dto.business.BusinessRequestDTO;
+import com.csse.api.dto.business.BusinessResponseDTO;
 import com.csse.api.model.Business;
+import com.csse.api.model.WasteType;
 import com.csse.api.repository.BusinessRepository;
+import com.csse.api.repository.WasteTypeRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class BusinessService {
@@ -17,35 +20,43 @@ public class BusinessService {
     private BusinessRepository businessRepository;
 
     @Autowired
+    private WasteTypeRepository wasteTypeRepository;
+
+    @Autowired
     private ModelMapper modelMapper;
 
-    public BusinessDTO createBusiness(BusinessDTO businessDTO) {
-        Business business = modelMapper.map(businessDTO, Business.class);
-        business = businessRepository.save(business);
-        return modelMapper.map(business, BusinessDTO.class);
+    public BusinessResponseDTO create(BusinessRequestDTO dto) {
+        Business business = modelMapper.map(dto, Business.class);
+        if (dto.getWasteTypeIds() != null) {
+            List<WasteType> wasteTypes = wasteTypeRepository.findAllById(dto.getWasteTypeIds());
+            business.setWasteTypes(wasteTypes);
+        }
+        return modelMapper.map(businessRepository.save(business), BusinessResponseDTO.class);
     }
 
-    public List<BusinessDTO> getAllBusinesses() {
-        List<Business> businesses = businessRepository.findAll();
-        return businesses.stream()
-                .map(business -> modelMapper.map(business, BusinessDTO.class))
-                .toList();
+    public List<BusinessResponseDTO> getAll() {
+        return businessRepository.findAll().stream()
+                .map(business -> modelMapper.map(business, BusinessResponseDTO.class))
+                .collect(Collectors.toList());
     }
 
-    public Optional<BusinessDTO> getBusinessById(long id) {
+    public BusinessResponseDTO getById(long id) {
         return businessRepository.findById(id)
-                .map(business -> modelMapper.map(business, BusinessDTO.class));
+                .map(business -> modelMapper.map(business, BusinessResponseDTO.class))
+                .orElse(null);
     }
 
-    public BusinessDTO updateBusiness(long id, BusinessDTO businessDTO) {
-        Business business = businessRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Business not found"));
-        modelMapper.map(businessDTO, business);
-        business = businessRepository.save(business);
-        return modelMapper.map(business, BusinessDTO.class);
+    public BusinessResponseDTO update(long id, BusinessRequestDTO dto) {
+        Business business = businessRepository.findById(id).orElseThrow();
+        modelMapper.map(dto, business);
+        if (dto.getWasteTypeIds() != null) {
+            List<WasteType> wasteTypes = wasteTypeRepository.findAllById(dto.getWasteTypeIds());
+            business.setWasteTypes(wasteTypes);
+        }
+        return modelMapper.map(businessRepository.save(business), BusinessResponseDTO.class);
     }
 
-    public void deleteBusiness(long id) {
+    public void delete(long id) {
         businessRepository.deleteById(id);
     }
 }

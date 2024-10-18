@@ -1,6 +1,7 @@
 package com.csse.api.controller;
 
-import com.csse.api.model.BinTypes;
+import com.csse.api.dto.bin_types.BinTypesRequestDTO;
+import com.csse.api.dto.bin_types.BinTypesResponseDTO;
 import com.csse.api.service.BinTypesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -13,33 +14,31 @@ import java.util.List;
 public class BinTypesController {
 
     @Autowired
-    private BinTypesService binTypesService;
+    private BinTypesService service;
+
+    @PostMapping
+    public ResponseEntity<BinTypesResponseDTO> create(@RequestBody BinTypesRequestDTO dto) {
+        return ResponseEntity.ok(service.create(dto));
+    }
 
     @GetMapping
-    public List<BinTypes> getAllBinTypes() {
-        return binTypesService.findAll();
+    public ResponseEntity<List<BinTypesResponseDTO>> getAll() {
+        return ResponseEntity.ok(service.getAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<BinTypes> getBinTypeById(@PathVariable Long id) {
-        return binTypesService.findById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
-    }
-
-    @PostMapping
-    public BinTypes createBinType(@RequestBody BinTypes binTypes) {
-        return binTypesService.createBinType(binTypes);
+    public ResponseEntity<BinTypesResponseDTO> getById(@PathVariable long id) {
+        return ResponseEntity.ok(service.getById(id));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<BinTypes> updateBinType(@PathVariable Long id, @RequestBody BinTypes binTypes) {
-        return ResponseEntity.ok(binTypesService.updateBinType(id, binTypes));
+    public ResponseEntity<BinTypesResponseDTO> update(@PathVariable long id, @RequestBody BinTypesRequestDTO dto) {
+        return ResponseEntity.ok(service.update(id, dto));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteBinType(@PathVariable Long id) {
-        binTypesService.deleteBinType(id);
+    public ResponseEntity<Void> delete(@PathVariable long id) {
+        service.delete(id);
         return ResponseEntity.noContent().build();
     }
 }

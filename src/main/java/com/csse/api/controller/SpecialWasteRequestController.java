@@ -1,8 +1,8 @@
 package com.csse.api.controller;
 
-import com.csse.api.dto.collection_schedule.CollectionScheduleRequestDTO;
-import com.csse.api.dto.collection_schedule.CollectionScheduleResponseDTO;
-import com.csse.api.service.CollectionScheduleService;
+import com.csse.api.dto.SpecialWasteRequestRequestDTO;
+import com.csse.api.dto.SpecialWasteRequestResponseDTO;
+import com.csse.api.service.SpecialWasteRequestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,29 +10,29 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/collection-schedules")
-public class CollectionScheduleController {
+@RequestMapping("/api/special-waste-requests")
+public class SpecialWasteRequestController {
 
     @Autowired
-    private CollectionScheduleService service;
+    private SpecialWasteRequestService service;
 
     @PostMapping
-    public ResponseEntity<CollectionScheduleResponseDTO> create(@RequestBody CollectionScheduleRequestDTO dto) {
+    public ResponseEntity<SpecialWasteRequestResponseDTO> create(@RequestBody SpecialWasteRequestRequestDTO dto) {
         return ResponseEntity.ok(service.create(dto));
     }
 
     @GetMapping
-    public ResponseEntity<List<CollectionScheduleResponseDTO>> getAll() {
+    public ResponseEntity<List<SpecialWasteRequestResponseDTO>> getAll() {
         return ResponseEntity.ok(service.getAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CollectionScheduleResponseDTO> getById(@PathVariable long id) {
+    public ResponseEntity<SpecialWasteRequestResponseDTO> getById(@PathVariable long id) {
         return ResponseEntity.ok(service.getById(id));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CollectionScheduleResponseDTO> update(@PathVariable long id, @RequestBody CollectionScheduleRequestDTO dto) {
+    public ResponseEntity<SpecialWasteRequestResponseDTO> update(@PathVariable long id, @RequestBody SpecialWasteRequestRequestDTO dto) {
         return ResponseEntity.ok(service.update(id, dto));
     }
 

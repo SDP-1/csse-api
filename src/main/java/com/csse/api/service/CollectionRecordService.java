@@ -1,6 +1,7 @@
 package com.csse.api.service;
 
-import com.csse.api.dto.CollectionRecordDTO;
+import com.csse.api.dto.collection_record.CollectionRecordRequestDTO;
+import com.csse.api.dto.collection_record.CollectionRecordResponseDTO;
 import com.csse.api.model.CollectionRecord;
 import com.csse.api.repository.CollectionRecordRepository;
 import org.modelmapper.ModelMapper;
@@ -8,44 +9,40 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class CollectionRecordService {
 
     @Autowired
-    private CollectionRecordRepository collectionRecordRepository;
+    private CollectionRecordRepository repository;
 
     @Autowired
     private ModelMapper modelMapper;
 
-    public CollectionRecordDTO createCollectionRecord(CollectionRecordDTO collectionRecordDTO) {
-        CollectionRecord collectionRecord = modelMapper.map(collectionRecordDTO, CollectionRecord.class);
-        collectionRecord = collectionRecordRepository.save(collectionRecord);
-        return modelMapper.map(collectionRecord, CollectionRecordDTO.class);
+    public CollectionRecordResponseDTO create(CollectionRecordRequestDTO dto) {
+        CollectionRecord entity = modelMapper.map(dto, CollectionRecord.class);
+        return modelMapper.map(repository.save(entity), CollectionRecordResponseDTO.class);
     }
 
-    public List<CollectionRecordDTO> getAllCollectionRecords() {
-        List<CollectionRecord> records = collectionRecordRepository.findAll();
-        return records.stream()
-                .map(record -> modelMapper.map(record, CollectionRecordDTO.class))
+    public List<CollectionRecordResponseDTO> getAll() {
+        return repository.findAll().stream()
+                .map(entity -> modelMapper.map(entity, CollectionRecordResponseDTO.class))
                 .toList();
     }
 
-    public Optional<CollectionRecordDTO> getCollectionRecordById(long id) {
-        return collectionRecordRepository.findById(id)
-                .map(record -> modelMapper.map(record, CollectionRecordDTO.class));
+    public CollectionRecordResponseDTO getById(long id) {
+        return repository.findById(id)
+                .map(entity -> modelMapper.map(entity, CollectionRecordResponseDTO.class))
+                .orElse(null);
     }
 
-    public CollectionRecordDTO updateCollectionRecord(long id, CollectionRecordDTO collectionRecordDTO) {
-        CollectionRecord collectionRecord = collectionRecordRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Collection Record not found"));
-        modelMapper.map(collectionRecordDTO, collectionRecord);
-        collectionRecord = collectionRecordRepository.save(collectionRecord);
-        return modelMapper.map(collectionRecord, CollectionRecordDTO.class);
+    public CollectionRecordResponseDTO update(long id, CollectionRecordRequestDTO dto) {
+        CollectionRecord entity = repository.findById(id).orElseThrow();
+        modelMapper.map(dto, entity);
+        return modelMapper.map(repository.save(entity), CollectionRecordResponseDTO.class);
     }
 
-    public void deleteCollectionRecord(long id) {
-        collectionRecordRepository.deleteById(id);
+    public void delete(long id) {
+        repository.deleteById(id);
     }
 }

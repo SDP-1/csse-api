@@ -1,6 +1,7 @@
 package com.csse.api.controller;
 
-import com.csse.api.dto.CollectionRecordDTO;
+import com.csse.api.dto.collection_record.CollectionRecordRequestDTO;
+import com.csse.api.dto.collection_record.CollectionRecordResponseDTO;
 import com.csse.api.service.CollectionRecordService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -13,36 +14,31 @@ import java.util.List;
 public class CollectionRecordController {
 
     @Autowired
-    private CollectionRecordService collectionRecordService;
+    private CollectionRecordService service;
 
     @PostMapping
-    public ResponseEntity<CollectionRecordDTO> createCollectionRecord(@RequestBody CollectionRecordDTO collectionRecordDTO) {
-        CollectionRecordDTO createdRecord = collectionRecordService.createCollectionRecord(collectionRecordDTO);
-        return ResponseEntity.ok(createdRecord);
+    public ResponseEntity<CollectionRecordResponseDTO> create(@RequestBody CollectionRecordRequestDTO dto) {
+        return ResponseEntity.ok(service.create(dto));
     }
 
     @GetMapping
-    public ResponseEntity<List<CollectionRecordDTO>> getAllCollectionRecords() {
-        List<CollectionRecordDTO> records = collectionRecordService.getAllCollectionRecords();
-        return ResponseEntity.ok(records);
+    public ResponseEntity<List<CollectionRecordResponseDTO>> getAll() {
+        return ResponseEntity.ok(service.getAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CollectionRecordDTO> getCollectionRecordById(@PathVariable long id) {
-        return collectionRecordService.getCollectionRecordById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<CollectionRecordResponseDTO> getById(@PathVariable long id) {
+        return ResponseEntity.ok(service.getById(id));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CollectionRecordDTO> updateCollectionRecord(@PathVariable long id, @RequestBody CollectionRecordDTO collectionRecordDTO) {
-        CollectionRecordDTO updatedRecord = collectionRecordService.updateCollectionRecord(id, collectionRecordDTO);
-        return ResponseEntity.ok(updatedRecord);
+    public ResponseEntity<CollectionRecordResponseDTO> update(@PathVariable long id, @RequestBody CollectionRecordRequestDTO dto) {
+        return ResponseEntity.ok(service.update(id, dto));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteCollectionRecord(@PathVariable long id) {
-        collectionRecordService.deleteCollectionRecord(id);
+    public ResponseEntity<Void> delete(@PathVariable long id) {
+        service.delete(id);
         return ResponseEntity.noContent().build();
     }
 }
