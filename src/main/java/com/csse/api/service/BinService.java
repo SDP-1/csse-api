@@ -2,9 +2,9 @@ package com.csse.api.service;
 
 import com.csse.api.dto.bin.BinRequestDTO;
 import com.csse.api.dto.bin.BinResponseDTO;
+import com.csse.api.exception.BinNotFoundException;
 import com.csse.api.model.*;
 import com.csse.api.repository.*;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,66 +15,85 @@ import java.util.stream.Collectors;
 public class BinService {
 
     private final BinRepository binRepository;
-
     private final WasteTypeRepository wasteTypeRepository;
-
     private final ResidentRepository residentRepository;
-
     private final BinTypesRepository binTypesRepository;
-
     private final TrackingDeviceRepository trackingDeviceRepository;
 
-    private final ModelMapper modelMapper;
-
-    public BinService(BinRepository binRepository, WasteTypeRepository wasteTypeRepository, ResidentRepository residentRepository, BinTypesRepository binTypesRepository, TrackingDeviceRepository trackingDeviceRepository, ModelMapper modelMapper) {
+    @Autowired
+    public BinService(BinRepository binRepository, WasteTypeRepository wasteTypeRepository,
+                      ResidentRepository residentRepository, BinTypesRepository binTypesRepository,
+                      TrackingDeviceRepository trackingDeviceRepository) {
         this.binRepository = binRepository;
         this.wasteTypeRepository = wasteTypeRepository;
         this.residentRepository = residentRepository;
         this.binTypesRepository = binTypesRepository;
         this.trackingDeviceRepository = trackingDeviceRepository;
-        this.modelMapper = modelMapper;
     }
 
     public BinResponseDTO create(BinRequestDTO dto) {
         Bin bin = new Bin();
-        bin.setWasteType(wasteTypeRepository.findById(dto.getWasteTypeId()).orElseThrow());
-        bin.setResident(residentRepository.findById(dto.getResidentId()).orElseThrow());
-        bin.setBinType(binTypesRepository.findById(dto.getBinTypeId()).orElseThrow());
-        // Set tracking device if present
+        bin.setWasteType(wasteTypeRepository.findById(dto.getWasteTypeId())
+                .orElseThrow(() -> new BinNotFoundException("WasteType not found")));
+        bin.setResident(residentRepository.findById(dto.getResidentId())
+                .orElseThrow(() -> new BinNotFoundException("Resident not found")));
+        bin.setBinType(binTypesRepository.findById(dto.getBinTypeId())
+                .orElseThrow(() -> new BinNotFoundException("BinType not found")));
+
         if (dto.getTrackingDeviceId() != null) {
-            // Assuming you have a TrackingDevice repository to find by ID
-            bin.setTrackingDevice(trackingDeviceRepository.findById(dto.getTrackingDeviceId()).orElseThrow());
+            bin.setTrackingDevice(trackingDeviceRepository.findById(dto.getTrackingDeviceId())
+                    .orElseThrow(() -> new BinNotFoundException("TrackingDevice not found")));
         }
-        return modelMapper.map(binRepository.save(bin), BinResponseDTO.class);
+
+        Bin savedBin = binRepository.save(bin);
+        return convertToResponseDTO(savedBin);
     }
 
     public List<BinResponseDTO> getAll() {
         return binRepository.findAll().stream()
-                .map(bin -> modelMapper.map(bin, BinResponseDTO.class))
+                .map(this::convertToResponseDTO)
                 .collect(Collectors.toList());
     }
 
     public BinResponseDTO getById(long id) {
-        return binRepository.findById(id)
-                .map(bin -> modelMapper.map(bin, BinResponseDTO.class))
-                .orElse(null);
+        Bin bin = binRepository.findById(id)
+                .orElseThrow(() -> new BinNotFoundException("Bin not found"));
+        return convertToResponseDTO(bin);
     }
 
     public BinResponseDTO update(long id, BinRequestDTO dto) {
-        Bin bin = binRepository.findById(id).orElseThrow();
-        bin.setWasteType(wasteTypeRepository.findById(dto.getWasteTypeId()).orElseThrow());
-        bin.setResident(residentRepository.findById(dto.getResidentId()).orElseThrow());
-        bin.setBinType(binTypesRepository.findById(dto.getBinTypeId()).orElseThrow());
-        // Update tracking device if present
+        Bin bin = binRepository.findById(id)
+                .orElseThrow(() -> new BinNotFoundException("Bin not found"));
+
+        bin.setWasteType(wasteTypeRepository.findById(dto.getWasteTypeId())
+                .orElseThrow(() -> new BinNotFoundException("WasteType not found")));
+        bin.setResident(residentRepository.findById(dto.getResidentId())
+                .orElseThrow(() -> new BinNotFoundException("Resident not found")));
+        bin.setBinType(binTypesRepository.findById(dto.getBinTypeId())
+                .orElseThrow(() -> new BinNotFoundException("BinType not found")));
+
         if (dto.getTrackingDeviceId() != null) {
-            bin.setTrackingDevice(trackingDeviceRepository.findById(dto.getTrackingDeviceId()).orElseThrow());
+            bin.setTrackingDevice(trackingDeviceRepository.findById(dto.getTrackingDeviceId())
+                    .orElseThrow(() -> new BinNotFoundException("TrackingDevice not found")));
         } else {
-            bin.setTrackingDevice(null); // Or handle as necessary
+            bin.setTrackingDevice(null);
         }
-        return modelMapper.map(binRepository.save(bin), BinResponseDTO.class);
+
+        Bin updatedBin = binRepository.save(bin);
+        return convertToResponseDTO(updatedBin);
     }
 
     public void delete(long id) {
         binRepository.deleteById(id);
+    }
+
+    private BinResponseDTO convertToResponseDTO(Bin bin) {
+        BinResponseDTO dto = new BinResponseDTO();
+        dto.setId(bin.getId());
+        dto.setWasteTypeId(bin.getWasteType().getId());
+        dto.setResidentId(bin.getResident() != null ? bin.getResident().getId() : null);
+        dto.setBinTypeId(bin.getBinType().getId());
+        dto.setTrackingDeviceId(bin.getTrackingDevice() != null ? bin.getTrackingDevice().getId() : null);
+        return dto;
     }
 }

@@ -2,6 +2,7 @@ package com.csse.api.controller;
 
 import com.csse.api.dto.SpecialWasteRequestRequestDTO;
 import com.csse.api.dto.SpecialWasteRequestResponseDTO;
+import com.csse.api.exception.SpecialWasteRequestNotFoundException;
 import com.csse.api.service.SpecialWasteRequestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +29,8 @@ public class SpecialWasteRequestController {
 
     @GetMapping("/{id}")
     public ResponseEntity<SpecialWasteRequestResponseDTO> getById(@PathVariable long id) {
-        return ResponseEntity.ok(service.getById(id));
+        SpecialWasteRequestResponseDTO response = service.getById(id);
+        return ResponseEntity.ok(response);
     }
 
     @PutMapping("/{id}")

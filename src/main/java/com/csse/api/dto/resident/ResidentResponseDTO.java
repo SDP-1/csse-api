@@ -1,5 +1,7 @@
+
 package com.csse.api.dto.resident;
 
+import com.csse.api.dto.user.UserResponseDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,7 +11,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ResidentResponseDTO {
+public class ResidentResponseDTO extends UserResponseDTO {
     private long id; // Assuming you have an ID in the User class
     private String name;
     private String address;

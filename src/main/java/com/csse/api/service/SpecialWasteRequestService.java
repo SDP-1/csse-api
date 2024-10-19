@@ -2,6 +2,7 @@ package com.csse.api.service;
 
 import com.csse.api.dto.SpecialWasteRequestRequestDTO;
 import com.csse.api.dto.SpecialWasteRequestResponseDTO;
+import com.csse.api.exception.SpecialWasteRequestNotFoundException;
 import com.csse.api.model.SpecialWasteRequest;
 import com.csse.api.repository.SpecialWasteRequestRepository;
 import org.modelmapper.ModelMapper;
@@ -33,11 +34,12 @@ public class SpecialWasteRequestService {
     public SpecialWasteRequestResponseDTO getById(long id) {
         return repository.findById(id)
                 .map(entity -> modelMapper.map(entity, SpecialWasteRequestResponseDTO.class))
-                .orElse(null);
+                .orElseThrow(() -> new SpecialWasteRequestNotFoundException(id));
     }
 
     public SpecialWasteRequestResponseDTO update(long id, SpecialWasteRequestRequestDTO dto) {
-        SpecialWasteRequest entity = repository.findById(id).orElseThrow();
+        SpecialWasteRequest entity = repository.findById(id)
+                .orElseThrow(() -> new SpecialWasteRequestNotFoundException(id));
         modelMapper.map(dto, entity);
         return modelMapper.map(repository.save(entity), SpecialWasteRequestResponseDTO.class);
     }

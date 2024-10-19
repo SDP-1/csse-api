@@ -13,8 +13,11 @@ import java.util.List;
 @RequestMapping("/api/bin-types")
 public class BinTypesController {
 
-    @Autowired
-    private BinTypesService service;
+    private final BinTypesService service;
+
+    public BinTypesController(BinTypesService service) {
+        this.service = service;
+    }
 
     @PostMapping
     public ResponseEntity<BinTypesResponseDTO> create(@RequestBody BinTypesRequestDTO dto) {

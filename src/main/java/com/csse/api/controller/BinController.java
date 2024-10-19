@@ -3,7 +3,6 @@ package com.csse.api.controller;
 import com.csse.api.dto.bin.BinRequestDTO;
 import com.csse.api.dto.bin.BinResponseDTO;
 import com.csse.api.service.BinService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,8 +12,11 @@ import java.util.List;
 @RequestMapping("/api/bins")
 public class BinController {
 
-    @Autowired
-    private BinService service;
+    private final BinService service;
+
+    public BinController(BinService service) {
+        this.service = service;
+    }
 
     @PostMapping
     public ResponseEntity<BinResponseDTO> create(@RequestBody BinRequestDTO dto) {

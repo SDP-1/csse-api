@@ -2,6 +2,7 @@ package com.csse.api.controller;
 
 import com.csse.api.dto.user.UserRequestDTO;
 import com.csse.api.dto.user.UserResponseDTO;
+import com.csse.api.exception.UserNotFoundException;
 import com.csse.api.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,6 +17,7 @@ public class UserController {
 
     private final UserService userService;
 
+    @Autowired
     public UserController(UserService userService) {
         this.userService = userService;
     }
@@ -28,8 +30,11 @@ public class UserController {
 
     @GetMapping("/{id}")
     public ResponseEntity<UserResponseDTO> getUserById(@PathVariable Long id) {
-        Optional<UserResponseDTO> userResponseDto = userService.getUserById(id);
-        return userResponseDto.map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+        try {
+            UserResponseDTO userResponseDto = userService.getUserById(id);
+            return ResponseEntity.ok(userResponseDto);
+        } catch (UserNotFoundException ex) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
     }
 }

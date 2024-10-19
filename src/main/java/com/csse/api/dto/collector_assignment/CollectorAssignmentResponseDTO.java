@@ -10,8 +10,8 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CollectorAssignmentResponseDTO {
-    private long id; // Assuming this is the primary key
-    private long collectionScheduleId; // For mapping to the CollectionSchedule entity
-    private long collectorId; // For mapping to the GarbageCollector entity
-    private Date assignedDate; // The specific date of the assignment
+    private long id;
+    private long collectionScheduleId;
+    private long collectorId;
+    private Date assignedDate;
 }

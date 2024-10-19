@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 
 @Entity
 @NoArgsConstructor
@@ -32,5 +31,4 @@ public class CollectionRecord {
     private float collectedWasteAmount;
     private String audioProof;
     private String videoProof;
-
 }

@@ -1,15 +1,15 @@
 package com.csse.api.dto;
 
 import com.csse.api.enums.VehicleType;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
+@Setter
 public class GarbageCollectorResponseDTO {
     private long id; // Assuming you have an ID in the User class
     private String collectorId;

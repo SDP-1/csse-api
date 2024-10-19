@@ -1,6 +1,7 @@
 package com.csse.api.controller;
 
-import com.csse.api.model.TrackingDevice;
+import com.csse.api.dto.tracking_device.TrackingDeviceRequestDTO;
+import com.csse.api.dto.tracking_device.TrackingDeviceResponseDTO;
 import com.csse.api.service.TrackingDeviceService;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -19,44 +20,38 @@ public class TrackingDeviceController {
 
     private final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("trackingDevices");
 
-    // Create a new TrackingDevice
     @PostMapping
-    public TrackingDevice createTrackingDevice(@RequestBody TrackingDevice trackingDevice) {
-        TrackingDevice createdDevice = trackingDeviceService.createTrackingDevice(trackingDevice);
+    public TrackingDeviceResponseDTO createTrackingDevice(@RequestBody TrackingDeviceRequestDTO trackingDeviceRequestDTO) {
+        TrackingDeviceResponseDTO createdDevice = trackingDeviceService.createTrackingDevice(trackingDeviceRequestDTO);
         databaseReference.child(String.valueOf(createdDevice.getId())).setValueAsync(createdDevice);
         return createdDevice;
     }
 
-    // Read all TrackingDevices
     @GetMapping
-    public List<TrackingDevice> getAllTrackingDevices() {
+    public List<TrackingDeviceResponseDTO> getAllTrackingDevices() {
         return trackingDeviceService.getAllTrackingDevices();
     }
 
-    // Read a specific TrackingDevice by ID
     @GetMapping("/{id}")
-    public ResponseEntity<TrackingDevice> getTrackingDeviceById(@PathVariable long id) {
-        TrackingDevice device = trackingDeviceService.getTrackingDeviceById(id);
+    public ResponseEntity<TrackingDeviceResponseDTO> getTrackingDeviceById(@PathVariable long id) {
+        TrackingDeviceResponseDTO device = trackingDeviceService.getTrackingDeviceById(id);
         return ResponseEntity.ok(device);
     }
 
-    // Update waste level of a TrackingDevice by ID
     @PostMapping("/updateWasteLevel/{id}")
-    public TrackingDevice updateWasteLevel(@PathVariable long id, @RequestParam float wasteLevel) {
-        TrackingDevice device = trackingDeviceService.updateWasteLevel(id, wasteLevel);
+    public TrackingDeviceResponseDTO updateWasteLevel(@PathVariable long id, @RequestParam float wasteLevel) {
+        TrackingDeviceResponseDTO device = trackingDeviceService.updateWasteLevel(id, wasteLevel);
         databaseReference.child(String.valueOf(id)).setValueAsync(device);
         return device;
     }
 
-    // Update an existing TrackingDevice
     @PutMapping("/{id}")
-    public ResponseEntity<TrackingDevice> updateTrackingDevice(@PathVariable long id, @RequestBody TrackingDevice trackingDevice) {
-        TrackingDevice updatedDevice = trackingDeviceService.updateTrackingDevice(id, trackingDevice);
+    public ResponseEntity<TrackingDeviceResponseDTO> updateTrackingDevice(@PathVariable long id, @RequestBody TrackingDeviceRequestDTO trackingDeviceRequestDTO) {
+        TrackingDeviceResponseDTO updatedDevice = trackingDeviceService.updateTrackingDevice(id, trackingDeviceRequestDTO);
         databaseReference.child(String.valueOf(id)).setValueAsync(updatedDevice);
         return ResponseEntity.ok(updatedDevice);
     }
 
-    // Delete a TrackingDevice by ID
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteTrackingDevice(@PathVariable long id) {
         trackingDeviceService.deleteTrackingDevice(id);

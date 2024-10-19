@@ -14,5 +14,5 @@ public class CollectionScheduleRequestDTO {
     private Date startDate;
     private Date endDate;
     private FrequencyType frequency;
-    private long routeId; // For mapping to the Route entity
+    private long routeId;
 }

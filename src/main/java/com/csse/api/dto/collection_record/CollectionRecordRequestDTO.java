@@ -10,8 +10,8 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CollectionRecordRequestDTO {
-    private long binId; // For mapping to the Bin entity
-    private long collectionScheduleId; // For mapping to the CollectionSchedule entity
+    private long binId;
+    private long collectionScheduleId;
     private LocalDateTime collectionDateTime;
     private float collectedWasteAmount;
     private String audioProof;
