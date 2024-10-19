@@ -20,7 +20,9 @@ public class ResidentController {
 
     @PostMapping
     public ResponseEntity<ResidentResponseDTO> create(@RequestBody ResidentRequestDTO dto) {
-        return ResponseEntity.ok(service.create(dto));
+        System.out.println(dto.toString());
+        ResidentResponseDTO createdResident = service.create(dto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdResident);
     }
 
     @GetMapping

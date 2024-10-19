@@ -19,4 +19,15 @@ spring:
       ddl-auto: update
     show-sql: true
 
-
+  web:
+    cors:
+      allowed-origins:
+        - http://localhost:5173
+      allowed-methods:
+        - GET
+        - POST
+        - PATCH
+        - PUT
+        - DELETE
+        - OPTIONS
+      allow-credentials: true

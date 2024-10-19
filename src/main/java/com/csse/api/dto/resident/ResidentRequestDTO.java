@@ -1,20 +1,23 @@
 package com.csse.api.dto.resident;
 
+import com.csse.api.dto.user.UserRequestDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ResidentRequestDTO {
+public class ResidentRequestDTO extends UserRequestDTO {
     private String name;
     private String address;
     private String residentialType;
-    private long wmaId; // For mapping to the WMA entity
-    private List<Long> binIds; // For mapping to the Bin entity
-    private List<Long> transactionIds; // For mapping to the Transaction entity
-    private List<Long> notificationIds; // For mapping to the AlertNotification entity
+    private long wmaId;
+    private List<Long> binIds;
+    private List<Long> transactionIds;
+    private List<Long> notificationIds;
 }

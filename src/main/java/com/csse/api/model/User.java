@@ -15,7 +15,10 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected long id;
+
+    @Column(unique = true)
     protected String email;
+
     protected String password;
 
     @Enumerated(EnumType.STRING)

@@ -1,19 +1,22 @@
 package com.csse.api.dto.business;
 
+import com.csse.api.dto.resident.ResidentRequestDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class BusinessRequestDTO {
-    private String name; // For mapping to the Resident entity
-    private String address; // For mapping to the Resident entity
-    private String residentialType; // For mapping to the Resident entity
+public class BusinessRequestDTO extends ResidentRequestDTO {
+    private String name;
+    private String address;
+    private String residentialType;
     private String businessType;
     private String businessRegistration;
-    private List<Long> wasteTypeIds; // For mapping to the WasteType entity
+    private List<Long> wasteTypeIds;
 }

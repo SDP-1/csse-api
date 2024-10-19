@@ -14,21 +14,24 @@ import java.util.List;
 @Service
 public class ResidentService {
 
-    @Autowired
-    private ResidentRepository repository;
+    private final ResidentRepository repository;
+
+    public ResidentService(ResidentRepository repository) {
+        this.repository = repository;
+    }
 
     public ResidentResponseDTO create(ResidentRequestDTO dto) {
         Resident resident = new Resident();
         resident.setName(dto.getName());
         resident.setAddress(dto.getAddress());
         resident.setResidentialType(dto.getResidentialType());
+        resident.setAddress(dto.getAddress());
+        resident.setResidentialType(dto.getResidentialType());
+        resident.setEmail(dto.getEmail());
+        resident.setPassword(dto.getPassword());
+        resident.setUserType(dto.getUserType());
 
-        // Set the WMA entity based on the wmaId
-        // Assuming WMA repository is available to fetch WMA by ID
-        // WMA wma = wmaRepository.findById(dto.getWmaId()).orElse(null);
-        // resident.setWma(wma);
-
-        // Handle bins, transactions, notifications similarly if needed
+        System.out.println(resident);
 
         return mapToResponseDTO(repository.save(resident));
     }
@@ -52,8 +55,9 @@ public class ResidentService {
         resident.setName(dto.getName());
         resident.setAddress(dto.getAddress());
         resident.setResidentialType(dto.getResidentialType());
-
-        // Update WMA and other relationships as needed
+        resident.setEmail(dto.getEmail());
+        resident.setPassword(dto.getPassword());
+        resident.setUserType(dto.getUserType());
 
         return mapToResponseDTO(repository.save(resident));
     }
@@ -71,7 +75,7 @@ public class ResidentService {
         dto.setName(resident.getName());
         dto.setAddress(resident.getAddress());
         dto.setResidentialType(resident.getResidentialType());
-
+        dto.setEmail(resident.getEmail());
         return dto;
     }
 }
