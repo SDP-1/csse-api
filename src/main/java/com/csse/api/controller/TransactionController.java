@@ -2,8 +2,10 @@ package com.csse.api.controller;
 
 import com.csse.api.dto.transaction.TransactionRequestDTO;
 import com.csse.api.dto.transaction.TransactionResponseDTO;
+import com.csse.api.exception.TransactionNotFoundException;
 import com.csse.api.service.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,10 +27,7 @@ public class TransactionController {
     @GetMapping("/{id}")
     public ResponseEntity<TransactionResponseDTO> getTransactionById(@PathVariable long id) {
         TransactionResponseDTO transactionResponseDTO = transactionService.getById(id);
-        if (transactionResponseDTO != null) {
-            return ResponseEntity.ok(transactionResponseDTO);
-        }
-        return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(transactionResponseDTO);
     }
 
     @GetMapping
@@ -48,5 +47,10 @@ public class TransactionController {
         transactionService.delete(id);
         return ResponseEntity.noContent().build();
     }
-}
 
+    // Exception handler for TransactionNotFoundException
+    @ExceptionHandler(TransactionNotFoundException.class)
+    public ResponseEntity<String> handleTransactionNotFound(TransactionNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+    }
+}

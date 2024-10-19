@@ -1,6 +1,5 @@
 package com.csse.api.model;
 
-
 import com.csse.api.enums.UserType;
 import jakarta.persistence.*;
 import lombok.*;
@@ -11,7 +10,6 @@ import lombok.*;
 @AllArgsConstructor
 @Getter
 @Setter
-@ToString
 @Inheritance(strategy = InheritanceType.JOINED)
 public class User {
     @Id
@@ -19,6 +17,7 @@ public class User {
     protected long id;
     protected String email;
     protected String password;
+
     @Enumerated(EnumType.STRING)
     protected UserType userType;
 }

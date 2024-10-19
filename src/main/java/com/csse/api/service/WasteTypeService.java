@@ -1,8 +1,8 @@
 package com.csse.api.service;
 
-
-import com.csse.api.dto.wasteType.WasteTypeRequest;
-import com.csse.api.dto.wasteType.WasteTypeResponse;
+import com.csse.api.dto.wasteType.WasteTypeRequestDTO;
+import com.csse.api.dto.wasteType.WasteTypeResponseDTO;
+import com.csse.api.exception.WasteTypeNotFoundException;
 import com.csse.api.model.WasteType;
 import com.csse.api.repository.WasteTypeRepository;
 import org.modelmapper.ModelMapper;
@@ -23,45 +23,42 @@ public class WasteTypeService {
         this.modelMapper = modelMapper;
     }
 
-    public ResponseEntity<List<WasteTypeResponse>> getAllWasteTypes() {
+    public ResponseEntity<List<WasteTypeResponseDTO>> getAllWasteTypes() {
         List<WasteType> wasteTypes = wasteTypeRepository.findAll();
-        List<WasteTypeResponse> wasteTypeResponses = wasteTypes.stream()
-                .map(wasteType -> modelMapper.map(wasteType, WasteTypeResponse.class))
+        List<WasteTypeResponseDTO> wasteTypeResponseDTOS = wasteTypes.stream()
+                .map(wasteType -> modelMapper.map(wasteType, WasteTypeResponseDTO.class))
                 .toList();
-        return new ResponseEntity<>(wasteTypeResponses, HttpStatus.OK);
+        return new ResponseEntity<>(wasteTypeResponseDTOS, HttpStatus.OK);
     }
 
-    public ResponseEntity<WasteTypeResponse> getWasteTypeById(long id) {
-        Optional<WasteType> wasteTypeOptional = wasteTypeRepository.findById(id);
-        if (wasteTypeOptional.isPresent()) {
-            WasteTypeResponse wasteTypeResponse = modelMapper.map(wasteTypeOptional.get(), WasteTypeResponse.class);
-            return new ResponseEntity<>(wasteTypeResponse, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+    public ResponseEntity<WasteTypeResponseDTO> getWasteTypeById(long id) {
+        WasteType wasteType = wasteTypeRepository.findById(id)
+                .orElseThrow(() -> new WasteTypeNotFoundException("Waste type not found with ID: " + id));
+        WasteTypeResponseDTO wasteTypeResponseDTO = modelMapper.map(wasteType, WasteTypeResponseDTO.class);
+        return new ResponseEntity<>(wasteTypeResponseDTO, HttpStatus.OK);
     }
 
-    public ResponseEntity<WasteTypeResponse> createWasteType(WasteTypeRequest wasteTypeRequest) {
-        WasteType wasteType = modelMapper.map(wasteTypeRequest, WasteType.class);
+    public ResponseEntity<WasteTypeResponseDTO> createWasteType(WasteTypeRequestDTO wasteTypeRequestDTO) {
+        WasteType wasteType = modelMapper.map(wasteTypeRequestDTO, WasteType.class);
         WasteType savedWasteType = wasteTypeRepository.save(wasteType);
-        WasteTypeResponse wasteTypeResponse = modelMapper.map(savedWasteType, WasteTypeResponse.class);
-        return new ResponseEntity<>(wasteTypeResponse, HttpStatus.CREATED);
+        WasteTypeResponseDTO wasteTypeResponseDTO = modelMapper.map(savedWasteType, WasteTypeResponseDTO.class);
+        return new ResponseEntity<>(wasteTypeResponseDTO, HttpStatus.CREATED);
     }
 
-    public ResponseEntity<WasteTypeResponse> updateWasteType(long id, WasteTypeRequest wasteTypeRequest) {
+    public ResponseEntity<WasteTypeResponseDTO> updateWasteType(long id, WasteTypeRequestDTO wasteTypeRequestDTO) {
         if (!wasteTypeRepository.existsById(id)) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            throw new WasteTypeNotFoundException("Waste type not found with ID: " + id);
         }
-        WasteType wasteType = modelMapper.map(wasteTypeRequest, WasteType.class);
-        wasteType.setId(id); // Ensure the ID is set for update
+        WasteType wasteType = modelMapper.map(wasteTypeRequestDTO, WasteType.class);
+        wasteType.setId(id);
         WasteType updatedWasteType = wasteTypeRepository.save(wasteType);
-        WasteTypeResponse wasteTypeResponse = modelMapper.map(updatedWasteType, WasteTypeResponse.class);
-        return new ResponseEntity<>(wasteTypeResponse, HttpStatus.OK);
+        WasteTypeResponseDTO wasteTypeResponseDTO = modelMapper.map(updatedWasteType, WasteTypeResponseDTO.class);
+        return new ResponseEntity<>(wasteTypeResponseDTO, HttpStatus.OK);
     }
 
     public ResponseEntity<Void> deleteWasteType(long id) {
         if (!wasteTypeRepository.existsById(id)) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            throw new WasteTypeNotFoundException("Waste type not found with ID: " + id);
         }
         wasteTypeRepository.deleteById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);

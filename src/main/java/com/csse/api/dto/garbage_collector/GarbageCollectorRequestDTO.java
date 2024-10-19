@@ -1,15 +1,15 @@
 package com.csse.api.dto;
 
 import com.csse.api.enums.VehicleType;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
+@Setter
 public class GarbageCollectorRequestDTO {
     private String collectorId;
     private String vehicleRegNo;

@@ -4,7 +4,8 @@ import com.csse.api.dto.admin.AdminRequestDTO;
 import com.csse.api.dto.admin.AdminResponseDTO;
 import com.csse.api.model.Admin;
 import com.csse.api.repository.AdminRepository;
-import org.modelmapper.ModelMapper;
+import com.csse.api.exception.AdminNotFoundException;
+import com.csse.api.enums.UserType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,45 +16,53 @@ import java.util.Optional;
 public class AdminService {
 
     private final AdminRepository adminRepository;
-    private final ModelMapper modelMapper;
 
     @Autowired
-    public AdminService(AdminRepository adminRepository, ModelMapper modelMapper) {
+    public AdminService(AdminRepository adminRepository) {
         this.adminRepository = adminRepository;
-        this.modelMapper = modelMapper;
     }
 
     public AdminResponseDTO createAdmin(AdminRequestDTO adminRequestDTO) {
-        Admin admin = modelMapper.map(adminRequestDTO, Admin.class);
+        Admin admin = new Admin();
+        admin.setName(adminRequestDTO.getName());
+        admin.setSuperAdmin(adminRequestDTO.isSuperAdmin());
+        // Default values for email, password, and userType
+        admin.setEmail("default@example.com");
+        admin.setPassword("defaultPassword");
+        admin.setUserType(UserType.ADMIN);
+
         Admin savedAdmin = adminRepository.save(admin);
-        return modelMapper.map(savedAdmin, AdminResponseDTO.class);
+        return convertToResponseDTO(savedAdmin);
     }
 
     public List<AdminResponseDTO> getAllAdmins() {
         List<Admin> admins = adminRepository.findAll();
         return admins.stream()
-                .map(admin -> modelMapper.map(admin, AdminResponseDTO.class))
+                .map(this::convertToResponseDTO)
                 .toList();
     }
 
     public Optional<AdminResponseDTO> getAdminById(Long id) {
         return adminRepository.findById(id)
-                .map(admin -> modelMapper.map(admin, AdminResponseDTO.class));
+                .map(this::convertToResponseDTO);
     }
 
     public AdminResponseDTO updateAdmin(Long id, AdminRequestDTO adminRequestDTO) {
         Admin adminToUpdate = adminRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Admin not found"));
+                .orElseThrow(() -> new AdminNotFoundException("Admin with id " + id + " not found"));
 
-        // Update fields
         adminToUpdate.setName(adminRequestDTO.getName());
         adminToUpdate.setSuperAdmin(adminRequestDTO.isSuperAdmin());
 
         Admin updatedAdmin = adminRepository.save(adminToUpdate);
-        return modelMapper.map(updatedAdmin, AdminResponseDTO.class);
+        return convertToResponseDTO(updatedAdmin);
     }
 
     public void deleteAdmin(Long id) {
         adminRepository.deleteById(id);
+    }
+
+    private AdminResponseDTO convertToResponseDTO(Admin admin) {
+        return new AdminResponseDTO(admin.getId(), admin.getName(), admin.isSuperAdmin());
     }
 }

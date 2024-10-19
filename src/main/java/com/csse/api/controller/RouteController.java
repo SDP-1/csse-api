@@ -2,8 +2,10 @@ package com.csse.api.controller;
 
 import com.csse.api.dto.route.RouteRequestDTO;
 import com.csse.api.dto.route.RouteResponseDTO;
+import com.csse.api.exception.RouteNotFoundException;
 import com.csse.api.service.RouteService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,27 +20,43 @@ public class RouteController {
 
     @PostMapping
     public ResponseEntity<RouteResponseDTO> create(@RequestBody RouteRequestDTO dto) {
-        return ResponseEntity.ok(service.create(dto));
+        RouteResponseDTO createdRoute = service.create(dto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdRoute);
     }
 
     @GetMapping
     public ResponseEntity<List<RouteResponseDTO>> getAll() {
-        return ResponseEntity.ok(service.getAll());
+        List<RouteResponseDTO> routes = service.getAll();
+        return ResponseEntity.ok(routes);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<RouteResponseDTO> getById(@PathVariable long id) {
-        return ResponseEntity.ok(service.getById(id));
+        try {
+            RouteResponseDTO route = service.getById(id);
+            return ResponseEntity.ok(route);
+        } catch (RouteNotFoundException ex) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<RouteResponseDTO> update(@PathVariable long id, @RequestBody RouteRequestDTO dto) {
-        return ResponseEntity.ok(service.update(id, dto));
+        try {
+            RouteResponseDTO updatedRoute = service.update(id, dto);
+            return ResponseEntity.ok(updatedRoute);
+        } catch (RouteNotFoundException ex) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable long id) {
-        service.delete(id);
-        return ResponseEntity.noContent().build();
+        try {
+            service.delete(id);
+            return ResponseEntity.noContent().build();
+        } catch (RouteNotFoundException ex) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
     }
 }

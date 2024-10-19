@@ -1,5 +1,6 @@
 package com.csse.api.service;
 
+import com.csse.api.exception.VehiclePriceNotFoundException;
 import com.csse.api.model.VehiclePrice;
 import com.csse.api.repository.VehiclePriceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +24,7 @@ public class VehiclePriceService {
 
     public VehiclePrice getVehiclePriceById(long id) {
         return vehiclePriceRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Vehicle Price not found with id: " + id));
+                .orElseThrow(() -> new VehiclePriceNotFoundException("Vehicle Price not found with id: " + id));
     }
 
     public List<VehiclePrice> getAllVehiclePrices() {
@@ -39,7 +40,7 @@ public class VehiclePriceService {
     }
 
     public void deleteVehiclePrice(long id) {
-        VehiclePrice vehiclePrice = getVehiclePriceById(id);
-        vehiclePriceRepository.delete(vehiclePrice);
+        getVehiclePriceById(id); // Check if it exists
+        vehiclePriceRepository.deleteById(id);
     }
 }

@@ -2,6 +2,7 @@ package com.csse.api.service;
 
 import com.csse.api.dto.transaction.TransactionRequestDTO;
 import com.csse.api.dto.transaction.TransactionResponseDTO;
+import com.csse.api.exception.TransactionNotFoundException; // Import the custom exception
 import com.csse.api.model.Resident;
 import com.csse.api.model.Transaction;
 import com.csse.api.model.WMA;
@@ -33,9 +34,11 @@ public class TransactionService {
     public TransactionResponseDTO create(TransactionRequestDTO dto) {
         Transaction transaction = modelMapper.map(dto, Transaction.class);
 
-        // Find and set Resident and WMA entities
-        Resident resident = residentRepository.findById(dto.getResidentId()).orElseThrow();
-        WMA wma = wmaRepository.findById(dto.getAuthorityId()).orElseThrow();
+        Resident resident = residentRepository.findById(dto.getResidentId()).orElseThrow(() ->
+                new TransactionNotFoundException("Resident not found with ID: " + dto.getResidentId()));
+        WMA wma = wmaRepository.findById(dto.getAuthorityId()).orElseThrow(() ->
+                new TransactionNotFoundException("WMA not found with ID: " + dto.getAuthorityId()));
+
         transaction.setResident(resident);
         transaction.setWma(wma);
 
@@ -51,18 +54,20 @@ public class TransactionService {
     public TransactionResponseDTO getById(long id) {
         return transactionRepository.findById(id)
                 .map(transaction -> modelMapper.map(transaction, TransactionResponseDTO.class))
-                .orElse(null);
+                .orElseThrow(() -> new TransactionNotFoundException("Transaction not found with ID: " + id));
     }
 
     public TransactionResponseDTO update(long id, TransactionRequestDTO dto) {
-        Transaction transaction = transactionRepository.findById(id).orElseThrow();
+        Transaction transaction = transactionRepository.findById(id).orElseThrow(() ->
+                new TransactionNotFoundException("Transaction not found with ID: " + id));
 
-        // Update the transaction with new data
         modelMapper.map(dto, transaction);
 
-        // Update the related Resident and WMA
-        Resident resident = residentRepository.findById(dto.getResidentId()).orElseThrow();
-        WMA wma = wmaRepository.findById(dto.getAuthorityId()).orElseThrow();
+        Resident resident = residentRepository.findById(dto.getResidentId()).orElseThrow(() ->
+                new TransactionNotFoundException("Resident not found with ID: " + dto.getResidentId()));
+        WMA wma = wmaRepository.findById(dto.getAuthorityId()).orElseThrow(() ->
+                new TransactionNotFoundException("WMA not found with ID: " + dto.getAuthorityId()));
+
         transaction.setResident(resident);
         transaction.setWma(wma);
 
@@ -70,6 +75,9 @@ public class TransactionService {
     }
 
     public void delete(long id) {
+        if (!transactionRepository.existsById(id)) {
+            throw new TransactionNotFoundException("Transaction not found with ID: " + id);
+        }
         transactionRepository.deleteById(id);
     }
 }

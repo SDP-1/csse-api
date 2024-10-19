@@ -1,28 +1,37 @@
 package com.csse.api.model;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.Date;
 
 @Entity
 @NoArgsConstructor
-@AllArgsConstructor
 @Getter
 @Setter
-@ToString
 public class CollectorAssignment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     @ManyToOne
-    @JoinColumn(name = "schedule_id", nullable = false)
-    private CollectionSchedule collectionSchedule; // The collection schedule for this assignment
+    @JoinColumn(name = "collection_schedule_id", nullable = false)
+    private CollectionSchedule collectionSchedule;
 
     @ManyToOne
     @JoinColumn(name = "collector_id", nullable = false)
-    private GarbageCollector collector; // The garbage collector assigned to this schedule
+    private GarbageCollector collector;
 
-    private Date assignedDate; // The specific date of the assignment
+    private Date assignmentDate; // Ensure this field exists
+
+    // Constructor with parameters
+    public CollectorAssignment(long id, CollectionSchedule collectionSchedule, GarbageCollector collector, Date assignmentDate) {
+        this.id = id;
+        this.collectionSchedule = collectionSchedule;
+        this.collector = collector;
+        this.assignmentDate = assignmentDate;
+    }
 }

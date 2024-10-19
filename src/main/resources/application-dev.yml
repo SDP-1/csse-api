@@ -6,6 +6,9 @@ spring:
     password: hackers-squad
     hikari:
       maximum-pool-size: 4
+  devtools:
+    restart:
+      enabled: false
 
   jpa:
     properties:
@@ -15,3 +18,5 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
+
+

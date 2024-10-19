@@ -14,8 +14,8 @@ import java.util.List;
 @ToString
 public class WMA {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // Auto-generated ID
-    private Long authorityId; // Change to Long type
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long authorityId;
     private String authorityName;
     private String region;
     private String contactNumber;

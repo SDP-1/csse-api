@@ -1,8 +1,8 @@
 package com.csse.api.controller;
 
-
-import com.csse.api.dto.wasteType.WasteTypeRequest;
-import com.csse.api.dto.wasteType.WasteTypeResponse;
+import com.csse.api.dto.wasteType.WasteTypeRequestDTO;
+import com.csse.api.dto.wasteType.WasteTypeResponseDTO;
+import com.csse.api.exception.WasteTypeNotFoundException;
 import com.csse.api.service.WasteTypeService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,24 +19,24 @@ public class WasteTypeController {
     }
 
     @GetMapping
-    public ResponseEntity<List<WasteTypeResponse>> getAllWasteTypes() {
+    public ResponseEntity<List<WasteTypeResponseDTO>> getAllWasteTypes() {
         return wasteTypeService.getAllWasteTypes();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<WasteTypeResponse> getWasteTypeById(@PathVariable long id) {
+    public ResponseEntity<WasteTypeResponseDTO> getWasteTypeById(@PathVariable long id) {
         return wasteTypeService.getWasteTypeById(id);
     }
 
     @PostMapping
-    public ResponseEntity<WasteTypeResponse> createWasteType(@RequestBody WasteTypeRequest wasteTypeRequest) {
-        return wasteTypeService.createWasteType(wasteTypeRequest);
+    public ResponseEntity<WasteTypeResponseDTO> createWasteType(@RequestBody WasteTypeRequestDTO wasteTypeRequestDTO) {
+        return wasteTypeService.createWasteType(wasteTypeRequestDTO);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<WasteTypeResponse> updateWasteType(@PathVariable long id,
-                                                             @RequestBody WasteTypeRequest wasteTypeRequest) {
-        return wasteTypeService.updateWasteType(id, wasteTypeRequest);
+    public ResponseEntity<WasteTypeResponseDTO> updateWasteType(@PathVariable long id,
+                                                                @RequestBody WasteTypeRequestDTO wasteTypeRequestDTO) {
+        return wasteTypeService.updateWasteType(id, wasteTypeRequestDTO);
     }
 
     @DeleteMapping("/{id}")

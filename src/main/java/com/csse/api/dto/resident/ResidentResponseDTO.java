@@ -1,3 +1,4 @@
+
 package com.csse.api.dto.resident;
 
 import lombok.AllArgsConstructor;

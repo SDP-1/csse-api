@@ -10,7 +10,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class VehicleTypeRequirementResponse {
+public class VehicleTypeRequirementResponseDTO {
     private long id;
     private VehicleType vehicleType;
     private int quantity;

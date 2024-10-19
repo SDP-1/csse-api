@@ -1,8 +1,8 @@
 package com.csse.api.service;
 
-
-import com.csse.api.dto.vehicleType.VehicleTypeRequirementRequest;
-import com.csse.api.dto.vehicleType.VehicleTypeRequirementResponse;
+import com.csse.api.dto.vehicleType.VehicleTypeRequirementRequestDTO;
+import com.csse.api.dto.vehicleType.VehicleTypeRequirementResponseDTO;
+import com.csse.api.exception.VehicleTypeRequirementNotFoundException;
 import com.csse.api.model.VehicleTypeRequirement;
 import com.csse.api.repository.VehicleTypeRequirementRepository;
 import org.modelmapper.ModelMapper;
@@ -23,29 +23,30 @@ public class VehicleTypeRequirementService {
         this.modelMapper = modelMapper;
     }
 
-    public VehicleTypeRequirementResponse createVehicleTypeRequirement(VehicleTypeRequirementRequest request) {
+    public VehicleTypeRequirementResponseDTO createVehicleTypeRequirement(VehicleTypeRequirementRequestDTO request) {
         VehicleTypeRequirement vehicleTypeRequirement = modelMapper.map(request, VehicleTypeRequirement.class);
         VehicleTypeRequirement savedRequirement = vehicleTypeRequirementRepository.save(vehicleTypeRequirement);
-        return modelMapper.map(savedRequirement, VehicleTypeRequirementResponse.class);
+        return modelMapper.map(savedRequirement, VehicleTypeRequirementResponseDTO.class);
     }
 
-    public Optional<VehicleTypeRequirementResponse> getVehicleTypeRequirementById(long id) {
-        return vehicleTypeRequirementRepository.findById(id)
-                .map(requirement -> modelMapper.map(requirement, VehicleTypeRequirementResponse.class));
+    public VehicleTypeRequirementResponseDTO getVehicleTypeRequirementById(long id) {
+        VehicleTypeRequirement requirement = vehicleTypeRequirementRepository.findById(id)
+                .orElseThrow(() -> new VehicleTypeRequirementNotFoundException("VehicleTypeRequirement not found with id: " + id));
+        return modelMapper.map(requirement, VehicleTypeRequirementResponseDTO.class);
     }
 
-    public List<VehicleTypeRequirementResponse> getAllVehicleTypeRequirements() {
+    public List<VehicleTypeRequirementResponseDTO> getAllVehicleTypeRequirements() {
         return vehicleTypeRequirementRepository.findAll().stream()
-                .map(requirement -> modelMapper.map(requirement, VehicleTypeRequirementResponse.class))
+                .map(requirement -> modelMapper.map(requirement, VehicleTypeRequirementResponseDTO.class))
                 .collect(Collectors.toList());
     }
 
-    public VehicleTypeRequirementResponse updateVehicleTypeRequirement(long id, VehicleTypeRequirementRequest request) {
+    public VehicleTypeRequirementResponseDTO updateVehicleTypeRequirement(long id, VehicleTypeRequirementRequestDTO request) {
         VehicleTypeRequirement existingRequirement = vehicleTypeRequirementRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Not Found"));
+                .orElseThrow(() -> new VehicleTypeRequirementNotFoundException("VehicleTypeRequirement not found with id: " + id));
         modelMapper.map(request, existingRequirement);
         VehicleTypeRequirement updatedRequirement = vehicleTypeRequirementRepository.save(existingRequirement);
-        return modelMapper.map(updatedRequirement, VehicleTypeRequirementResponse.class);
+        return modelMapper.map(updatedRequirement, VehicleTypeRequirementResponseDTO.class);
     }
 
     public void deleteVehicleTypeRequirement(long id) {

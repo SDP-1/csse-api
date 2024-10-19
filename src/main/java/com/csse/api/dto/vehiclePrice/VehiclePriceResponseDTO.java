@@ -6,7 +6,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class VehiclePriceResponse {
+public class VehiclePriceResponseDTO {
     private long id; // ID of the vehicle price
     private VehicleType vehicleType; // Type of vehicle
     private double price; // Price for the vehicle type

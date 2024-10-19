@@ -10,7 +10,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class VehicleTypeRequirementRequest {
+public class VehicleTypeRequirementRequestDTO {
     private VehicleType vehicleType;
     private int quantity;
     private Long specialWasteRequestId; // Assuming this is a foreign key reference

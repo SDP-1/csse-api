@@ -29,4 +29,8 @@ public class GarbageCollector extends User {
 
     @ManyToMany(mappedBy = "garbageCollectors")
     private List<SpecialWasteRequest> specialWasteRequests;
+
+    public GarbageCollector(long id) {
+        this.id = id;
+    }
 }

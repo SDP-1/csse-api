@@ -1,8 +1,8 @@
 package com.csse.api.controller;
 
-
-import com.csse.api.dto.vehiclePrice.VehiclePriceRequest;
-import com.csse.api.dto.vehiclePrice.VehiclePriceResponse;
+import com.csse.api.dto.vehiclePrice.VehiclePriceRequestDTO;
+import com.csse.api.dto.vehiclePrice.VehiclePriceResponseDTO;
+import com.csse.api.exception.VehiclePriceNotFoundException;
 import com.csse.api.model.VehiclePrice;
 import com.csse.api.service.VehiclePriceService;
 import org.modelmapper.ModelMapper;
@@ -26,34 +26,34 @@ public class VehiclePriceController {
     }
 
     @PostMapping
-    public ResponseEntity<VehiclePriceResponse> createVehiclePrice(@RequestBody VehiclePriceRequest request) {
+    public ResponseEntity<VehiclePriceResponseDTO> createVehiclePrice(@RequestBody VehiclePriceRequestDTO request) {
         VehiclePrice vehiclePrice = modelMapper.map(request, VehiclePrice.class);
         VehiclePrice savedVehiclePrice = vehiclePriceService.createVehiclePrice(vehiclePrice);
-        VehiclePriceResponse response = modelMapper.map(savedVehiclePrice, VehiclePriceResponse.class);
+        VehiclePriceResponseDTO response = modelMapper.map(savedVehiclePrice, VehiclePriceResponseDTO.class);
         return ResponseEntity.status(201).body(response);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<VehiclePriceResponse> getVehiclePriceById(@PathVariable long id) {
+    public ResponseEntity<VehiclePriceResponseDTO> getVehiclePriceById(@PathVariable long id) {
         VehiclePrice vehiclePrice = vehiclePriceService.getVehiclePriceById(id);
-        VehiclePriceResponse response = modelMapper.map(vehiclePrice, VehiclePriceResponse.class);
+        VehiclePriceResponseDTO response = modelMapper.map(vehiclePrice, VehiclePriceResponseDTO.class);
         return ResponseEntity.ok(response);
     }
 
     @GetMapping
-    public ResponseEntity<List<VehiclePriceResponse>> getAllVehiclePrices() {
+    public ResponseEntity<List<VehiclePriceResponseDTO>> getAllVehiclePrices() {
         List<VehiclePrice> vehiclePrices = vehiclePriceService.getAllVehiclePrices();
-        List<VehiclePriceResponse> response = vehiclePrices.stream()
-                .map(vehiclePrice -> modelMapper.map(vehiclePrice, VehiclePriceResponse.class))
+        List<VehiclePriceResponseDTO> response = vehiclePrices.stream()
+                .map(vehiclePrice -> modelMapper.map(vehiclePrice, VehiclePriceResponseDTO.class))
                 .toList();
         return ResponseEntity.ok(response);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<VehiclePriceResponse> updateVehiclePrice(@PathVariable long id, @RequestBody VehiclePriceRequest request) {
+    public ResponseEntity<VehiclePriceResponseDTO> updateVehiclePrice(@PathVariable long id, @RequestBody VehiclePriceRequestDTO request) {
         VehiclePrice vehiclePrice = modelMapper.map(request, VehiclePrice.class);
         VehiclePrice updatedVehiclePrice = vehiclePriceService.updateVehiclePrice(id, vehiclePrice);
-        VehiclePriceResponse response = modelMapper.map(updatedVehiclePrice, VehiclePriceResponse.class);
+        VehiclePriceResponseDTO response = modelMapper.map(updatedVehiclePrice, VehiclePriceResponseDTO.class);
         return ResponseEntity.ok(response);
     }
 
@@ -61,5 +61,10 @@ public class VehiclePriceController {
     public ResponseEntity<Void> deleteVehiclePrice(@PathVariable long id) {
         vehiclePriceService.deleteVehiclePrice(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @ExceptionHandler(VehiclePriceNotFoundException.class)
+    public ResponseEntity<String> handleVehiclePriceNotFound(VehiclePriceNotFoundException ex) {
+        return ResponseEntity.status(404).body(ex.getMessage());
     }
 }

@@ -1,7 +1,7 @@
 package com.csse.api.controller;
 
-import com.csse.api.dto.vehicleType.VehicleTypeRequirementRequest;
-import com.csse.api.dto.vehicleType.VehicleTypeRequirementResponse;
+import com.csse.api.dto.vehicleType.VehicleTypeRequirementRequestDTO;
+import com.csse.api.dto.vehicleType.VehicleTypeRequirementResponseDTO;
 import com.csse.api.service.VehicleTypeRequirementService;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
@@ -24,27 +24,27 @@ public class VehicleTypeRequirementController {
     }
 
     @PostMapping
-    public ResponseEntity<VehicleTypeRequirementResponse> createVehicleTypeRequirement(@RequestBody VehicleTypeRequirementRequest request) {
-        VehicleTypeRequirementResponse response = vehicleTypeRequirementService.createVehicleTypeRequirement(request);
+    public ResponseEntity<VehicleTypeRequirementResponseDTO> createVehicleTypeRequirement(@RequestBody VehicleTypeRequirementRequestDTO request) {
+        VehicleTypeRequirementResponseDTO response = vehicleTypeRequirementService.createVehicleTypeRequirement(request);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<VehicleTypeRequirementResponse> getVehicleTypeRequirementById(@PathVariable long id) {
-        Optional<VehicleTypeRequirementResponse> response = vehicleTypeRequirementService.getVehicleTypeRequirementById(id);
+    public ResponseEntity<VehicleTypeRequirementResponseDTO> getVehicleTypeRequirementById(@PathVariable long id) {
+        Optional<VehicleTypeRequirementResponseDTO> response = Optional.ofNullable(vehicleTypeRequirementService.getVehicleTypeRequirementById(id));
         return response.map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
     @GetMapping
-    public ResponseEntity<List<VehicleTypeRequirementResponse>> getAllVehicleTypeRequirements() {
-        List<VehicleTypeRequirementResponse> response = vehicleTypeRequirementService.getAllVehicleTypeRequirements();
+    public ResponseEntity<List<VehicleTypeRequirementResponseDTO>> getAllVehicleTypeRequirements() {
+        List<VehicleTypeRequirementResponseDTO> response = vehicleTypeRequirementService.getAllVehicleTypeRequirements();
         return ResponseEntity.ok(response);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<VehicleTypeRequirementResponse> updateVehicleTypeRequirement(@PathVariable long id, @RequestBody VehicleTypeRequirementRequest request) {
-        VehicleTypeRequirementResponse response = vehicleTypeRequirementService.updateVehicleTypeRequirement(id, request);
+    public ResponseEntity<VehicleTypeRequirementResponseDTO> updateVehicleTypeRequirement(@PathVariable long id, @RequestBody VehicleTypeRequirementRequestDTO request) {
+        VehicleTypeRequirementResponseDTO response = vehicleTypeRequirementService.updateVehicleTypeRequirement(id, request);
         return ResponseEntity.ok(response);
     }
 
